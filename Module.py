@@ -16,9 +16,10 @@ class Module(Component):
             self.__current_run[frame] = time.time()
 
         elif 'return' == event:
-            if time.time() - self.__current_run[frame] >= 1:
-                Log.error('Function %s (%s) is not ascyn' % (
-                    frame.f_code.co_name, frame.f_code.co_filename
+            delay = time.time() - self.__current_run[frame]
+            if delay >= 2 and 'circuits/core' not in frame.f_code.co_filename:
+                Log.error('Function %s is not ascyn (delay: %f, file: %s)' % (
+                    frame.f_code.co_name, delay, frame.f_code.co_filename
                 ))
 
             del(self.__current_run[frame])
